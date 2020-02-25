@@ -1,9 +1,9 @@
 package com.example.imageloadproject.domain.model;
 
-import com.example.imageloadproject.data.remote.api.Image;
+import io.realm.RealmObject;
 
-public class ImageModel {
-    private long id;
+public class ImageModel extends  RealmObject {
+
     private String url;
     private String name;
 
@@ -11,19 +11,16 @@ public class ImageModel {
 
     }
 
+    public ImageModel(ImageModel model){
+       url = model.url;
+       name = model.name;
+    }
+
     public ImageModel(long id, String url, String name) {
-        this.id = id;
         this.url = url;
         this.name = name;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getUrl() {
         return url;

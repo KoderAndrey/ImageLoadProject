@@ -4,6 +4,7 @@ import com.example.imageloadproject.domain.di.DaggerAppComponent;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
+import io.realm.Realm;
 
 public class ImageLoadApplication extends DaggerApplication {
     @Override
@@ -12,5 +13,11 @@ public class ImageLoadApplication extends DaggerApplication {
                 .builder()
                 .application(this)
                 .build();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Realm.init(this);
     }
 }
