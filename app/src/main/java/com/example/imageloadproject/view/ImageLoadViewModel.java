@@ -2,6 +2,7 @@ package com.example.imageloadproject.view;
 
 import android.annotation.SuppressLint;
 
+import androidx.databinding.ObservableInt;
 import androidx.lifecycle.ViewModel;
 
 import com.example.imageloadproject.domain.model.ImageModel;
@@ -12,24 +13,19 @@ import com.hadilq.liveevent.LiveEvent;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.CompletableSource;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmResults;
+
+import static android.text.TextUtils.isEmpty;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class ImageLoadViewModel extends ViewModel {
 
     private ImageRequestUseCase mRequestUseCase;
     private ImageLocalUseCase mLocalUseCase;
-    private LiveEvent<Boolean> mIsLoad = new LiveEvent<>();
+    public ObservableInt mIsLoad = new ObservableInt(GONE);
     private LiveEvent<Throwable> mError = new LiveEvent<>();
     private LiveEvent<RealmResults<ImageModel>> mImageModelsEvent = new LiveEvent<>();
 
@@ -39,15 +35,16 @@ public class ImageLoadViewModel extends ViewModel {
         mLocalUseCase = localUseCase;
     }
 
-    public void getImage(String search) {
+    void getImage(String search) {
         mRequestUseCase
                 .getImageModel(search)
                 .flatMapCompletable(this::setImageToDB)
-                .doOnSubscribe(disposable -> mIsLoad.postValue(true))
-                .doAfterTerminate(() -> mIsLoad.postValue(false))
-                .doOnError(throwable -> mError.postValue(throwable))
                 .subscribeOn(Schedulers.io())
-                .subscribe();
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> mIsLoad.set(VISIBLE))
+                .doAfterTerminate(() -> mIsLoad.set(GONE))
+                .subscribe(() -> {
+                }, throwable -> mError.postValue(throwable));
     }
 
     private Completable setImageToDB(ImageModel model) {
@@ -61,8 +58,10 @@ public class ImageLoadViewModel extends ViewModel {
                 .subscribe(imageModels -> mImageModelsEvent.postValue(imageModels));
     }
 
-    public LiveEvent<Boolean> getIsLoad() {
-        return mIsLoad;
+    public void clickSearch(String search) {
+        if (!isEmpty(search)) {
+            getImage(search);
+        }
     }
 
     public LiveEvent<RealmResults<ImageModel>> getImageModelsEvent() {

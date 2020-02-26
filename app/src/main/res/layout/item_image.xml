@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_bottom_item"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
+    <data>
+
+        <variable
+            name="imageModel"
+            type="com.example.imageloadproject.domain.model.ImageModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_separator"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_separator"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/size_image"
-        android:layout_height="@dimen/size_image"
-        android:layout_margin="@dimen/margin_image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:textSize="@dimen/size_image_text"
-        android:id="@+id/name_image"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_image"
-        app:layout_constraintLeft_toRightOf="@+id/image"
-        app:layout_constraintTop_toTopOf="@id/image" />
+        android:layout_marginBottom="@dimen/margin_bottom_item"
+        android:orientation="vertical">
 
-    <TextView
-        android:textSize="@dimen/size_link_text"
-        app:layout_constraintLeft_toRightOf="@+id/image"
-        android:id="@+id/url_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_image"
-        app:layout_constraintBottom_toBottomOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@+id/name_image" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_separator"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_separator"
+            android:background="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/size_image"
+            android:layout_height="@dimen/size_image"
+            android:layout_margin="@dimen/margin_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/name_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_bottom_item"
+            android:layout_marginEnd="@dimen/margin_bottom_item"
+            android:text='@{"name - "+imageModel.getName()}'
+            android:textSize="@dimen/size_image_text"
+            app:layout_constraintLeft_toRightOf="@+id/image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/image" />
+
+        <TextView
+            android:id="@+id/url_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_bottom_item"
+            android:layout_marginTop="@dimen/margin_top_name"
+            android:layout_marginEnd="@dimen/margin_bottom_item"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text='@{"url - "+imageModel.getUrl()}'
+            android:textSize="@dimen/size_link_text"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintLeft_toRightOf="@+id/image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_image" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

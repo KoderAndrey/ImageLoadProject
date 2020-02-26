@@ -15,6 +15,8 @@ import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.text.TextUtils.isEmpty;
+
 public class ImageLocalRepository {
 
     @Inject
@@ -25,10 +27,14 @@ public class ImageLocalRepository {
 
     public Completable addItem(ImageModel model) {
         return Completable.create(emitter -> Realm.getDefaultInstance().executeTransaction(realm -> {
-            ImageModel m = realm.createObject(ImageModel.class);
-            m.setName(model.getName());
-            m.setUrl(model.getUrl());
-            emitter.onComplete();
+            if (!isEmpty(model.getUrl())) {
+                ImageModel m = realm.createObject(ImageModel.class);
+                m.setName(model.getName());
+                m.setUrl(model.getUrl());
+                emitter.onComplete();
+            } else {
+                emitter.onError(new NullPointerException("No image for request"));
+            }
         }));
     }
 

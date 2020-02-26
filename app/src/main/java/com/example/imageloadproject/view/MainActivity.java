@@ -1,24 +1,17 @@
 package com.example.imageloadproject.view;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.EditText;
 
-import androidx.lifecycle.Observer;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.imageloadproject.R;
-import com.example.imageloadproject.domain.model.ImageModel;
+import com.example.imageloadproject.databinding.ActivityMainBinding;
+import com.example.imageloadproject.util.AlertUtil;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.RealmChangeListener;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 public class MainActivity extends DaggerAppCompatActivity {
 
@@ -28,26 +21,25 @@ public class MainActivity extends DaggerAppCompatActivity {
     protected ViewModelProvider.Factory mViewModelFactory;
 
     private ImageRecyclerAdapter mAdapter;
-    private RecyclerView mRecyclerView;
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ImageLoadViewModel.class);
+        mBinding.setViewModel(mViewModel);
         setObservers();
         mViewModel.getListModelImage();
-        findViewById(R.id.search_button).setOnClickListener(v -> mViewModel
-                .getImage(((EditText) findViewById(R.id.search_field))
-                        .getText().toString()));
-        mRecyclerView = findViewById(R.id.recycler_view);
     }
 
-    private void setObservers(){
+    private void setObservers() {
         mViewModel.getImageModelsEvent().observe(this, imageModels -> {
             mAdapter = new ImageRecyclerAdapter(imageModels);
-            mRecyclerView.setAdapter(mAdapter);
-            Log.i("test_test", "list " + imageModels);
+            mBinding.recyclerView.setAdapter(mAdapter);
+        });
+        mViewModel.getError().observe(this, throwable -> {
+            AlertUtil.showErrorDialog(this, throwable.getMessage());
         });
     }
 }

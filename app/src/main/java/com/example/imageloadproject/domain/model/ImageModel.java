@@ -16,7 +16,7 @@ public class ImageModel extends  RealmObject {
        name = model.name;
     }
 
-    public ImageModel(long id, String url, String name) {
+    public ImageModel( String url, String name) {
         this.url = url;
         this.name = name;
     }

@@ -6,6 +6,8 @@ import com.example.imageloadproject.data.remote.ImageService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -32,7 +34,7 @@ public class NetworkModule {
     @Singleton
     @Provides
     HttpLoggingInterceptor provideHttpLoggingInterceptor() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(s -> Log.i("Interceptor", s));
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
         return loggingInterceptor;
     }

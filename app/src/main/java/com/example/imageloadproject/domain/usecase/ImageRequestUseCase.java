@@ -28,7 +28,11 @@ public class ImageRequestUseCase {
                 .getDataImage(search)
                 .map(data -> {
                     List<Photo> photos = data.getPhotos();
-                    return Mapper.mapToImageModel(photos.get(mRandom.nextInt(photos.size())));
+                    if (photos.size() > 0) {
+                        return Mapper.mapToImageModel(photos.get(mRandom.nextInt(photos.size())));
+                    } else {
+                        return new ImageModel();
+                    }
                 });
     }
 }
